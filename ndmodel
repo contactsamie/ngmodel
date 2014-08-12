@@ -1,0 +1,46 @@
+//client
+angular.module('nglarApp')
+    .controller('MainCtrl', function($scope) {
+        $scope.$watch('clockSettings', function () {
+            $scope.clockTime = $scope.clockSettings;
+        });
+        $scope.$watch('clockTime', function () {
+            $scope.clockSettings = $scope.clockTime;
+        });
+    });
+angular.module('nglarApp')
+    .directive('simpleClock', function () {
+        return {
+            require: 'ngModel',
+            restrict: 'E',
+            templateUrl: 'views/clock.html',
+            link: function (scope, element, attribute, ngModelController) {
+                //Set Default Values
+                var defaultModelValue = {};
+                var defaultViewValue = {};
+                //how does model map to view
+                var modelValueToViewValue = function (modelValue) {
+                    modelValue = modelValue || defaultModelValue;
+                    return {};
+                };
+                //how does view map to model
+                var viewValueToModelValue = function (viewValue) {
+                    viewValue = viewValue || defaultViewValue;
+                    return {};
+                };
+                //prety much standard to be handles by what will extract view value from ui
+                var onViewValueChange = function (viewValue) {
+                    ngModelController.$setViewValue(viewValue);
+                };
+                //when ever view value is ready, how will rendering o view be done?
+                var onViewValueAvailableForRender=function() {
+                   var toView= ngModelController.$viewValue;
+                };
+                //pass all intentions to angular
+                scope.$watch('clock', onViewValueChange, true);
+                ngModelController.$parsers.push(viewValueToModelValue);
+                ngModelController.$formatters.push(modelValueToViewValue);
+                ngModelController.$render = onViewValueAvailableForRender;
+            }
+        };
+    });
